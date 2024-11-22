@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://8i8g34t2fvvu"]
+
+[ext_resource type="Texture2D" uid="uid://byhfl2b1kpxts" path="res://Assets/Free Pixel Art Forest/Preview/Background.png" id="1_wqqjj"]
+[ext_resource type="PackedScene" uid="uid://ihvyfrlt24mi" path="res://scenes/character.tscn" id="2_c3uvt"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(205, 15)
+scale = Vector2(0.588876, 0.475252)
+texture = ExtResource("1_wqqjj")
+
+[node name="Character" parent="." instance=ExtResource("2_c3uvt")]
+position = Vector2(56, 168)
