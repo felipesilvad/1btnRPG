@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://8i8g34t2fvvu"]
+[gd_scene load_steps=5 format=3 uid="uid://8i8g34t2fvvu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_uc2rm"]
 [ext_resource type="Texture2D" uid="uid://byhfl2b1kpxts" path="res://Assets/Free Pixel Art Forest/Preview/Background.png" id="1_wqqjj"]
 [ext_resource type="PackedScene" uid="uid://ihvyfrlt24mi" path="res://scenes/character.tscn" id="2_c3uvt"]
 [ext_resource type="Script" path="res://scenes/player_bar.gd" id="3_fdyik"]
-[ext_resource type="Texture2D" uid="uid://dvhewgfug4nx5" path="res://icon.svg" id="5_3387h"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_uc2rm")
@@ -25,10 +24,3 @@ offset_top = 168.0
 offset_right = 160.0
 offset_bottom = 176.0
 script = ExtResource("3_fdyik")
-
-[node name="cursor" type="TextureRect" parent="Player Bar"]
-layout_mode = 0
-offset_right = 1.0
-offset_bottom = 8.0
-texture = ExtResource("5_3387h")
-expand_mode = 1
