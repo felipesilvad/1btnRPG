@@ -2,14 +2,16 @@ class_name Player
 extends CharacterBody2D
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-
+var hitbox_scene:PackedScene = preload("res://scenes/hitbox.tscn")
+var side: int
 var hold_time: float = 0.0
 var is_holding: bool = false
+var health: int = 100
 
 const THRESHOLDS = [
-	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.RED},
-	{"hold": "first_long_hold", "action": "first_long_press_action", "value": 0.75, "color": Color.ORANGE},
-	{"hold": "crit_hold", "action": "critical_hit_action", "value": 0.85, "color": Color.YELLOW},
+	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
+	{"hold": "first_long_hold", "action": "first_long_press_action", "value": 0.75, "color": Color.INDIAN_RED},
+	{"hold": "crit_hold", "action": "critical_hit_action", "value": 0.85, "color": Color.PALE_GREEN},
 	{"hold": "", "action": "second_long_press_action", "value": 1, "color": Color.ORANGE}
 ]
 const MAX_THRESHOLD: float = 1
@@ -41,16 +43,24 @@ func crit_hold() -> void:
 	animation_player.play("hold")
 	
 func first_long_press_action() -> void:
-	print("First Long Press detected!")
+	animation_player.play("fail")
+	animation_player.queue("idle")
 
 func critical_hit_action() -> void:
-	print("Critical Hit!")
+	animation_player.play("release")
+	animation_player.queue("idle")
+	var hitbox = hitbox_scene.instantiate()
+	hitbox.user = self
+	add_child(hitbox)
+	
 
 func second_long_press_action() -> void:
-	print("Second Long Press detected!")
+	animation_player.play("release")
+	animation_player.queue("idle")
 
 func overshoot_action() -> void:
-	print("Overshoot!")
+	animation_player.play("fail")
+	animation_player.queue("idle")
 
 func move_to_target(object, start:Vector2, end:Vector2, speed:float):
 	var tween = create_tween()

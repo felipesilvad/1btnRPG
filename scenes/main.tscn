@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://8i8g34t2fvvu"]
+[gd_scene load_steps=8 format=3 uid="uid://8i8g34t2fvvu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_uc2rm"]
 [ext_resource type="Texture2D" uid="uid://byhfl2b1kpxts" path="res://Assets/Free Pixel Art Forest/Preview/Background.png" id="1_wqqjj"]
 [ext_resource type="PackedScene" uid="uid://ihvyfrlt24mi" path="res://scenes/character.tscn" id="2_c3uvt"]
 [ext_resource type="Script" path="res://scenes/player_bar.gd" id="3_fdyik"]
+[ext_resource type="Script" path="res://scenes/spot.gd" id="5_wxs4c"]
+[ext_resource type="Script" path="res://scenes/spot2.gd" id="6_htqui"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o0bjm"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_uc2rm")
@@ -14,7 +18,7 @@ scale = Vector2(0.588876, 0.475252)
 texture = ExtResource("1_wqqjj")
 
 [node name="Character" parent="." instance=ExtResource("2_c3uvt")]
-position = Vector2(56, 152)
+visible = false
 
 [node name="Player Bar" type="Control" parent="."]
 layout_mode = 3
@@ -24,3 +28,53 @@ offset_top = 168.0
 offset_right = 160.0
 offset_bottom = 176.0
 script = ExtResource("3_fdyik")
+
+[node name="player" type="Node" parent="."]
+
+[node name="spot1" type="Area2D" parent="player"]
+position = Vector2(56, 152)
+script = ExtResource("5_wxs4c")
+char = ExtResource("2_c3uvt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot1"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
+
+[node name="spot2" type="Area2D" parent="player"]
+position = Vector2(96, 152)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot2"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
+
+[node name="spot3" type="Area2D" parent="player"]
+position = Vector2(136, 152)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot3"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
+
+[node name="player2" type="Node" parent="."]
+
+[node name="spot1" type="Area2D" parent="player2"]
+position = Vector2(264, 152)
+script = ExtResource("6_htqui")
+char = ExtResource("2_c3uvt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot1"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
+
+[node name="spot2" type="Area2D" parent="player2"]
+position = Vector2(224, 152)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot2"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
+
+[node name="spot3" type="Area2D" parent="player2"]
+position = Vector2(184, 152)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot3"]
+shape = SubResource("CircleShape2D_o0bjm")
+debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)

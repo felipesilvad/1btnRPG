@@ -1,12 +1,15 @@
 extends Node2D
 
-@onready var current_player: Player = $Character
+@onready var current_player: Player
 @onready var player_bar: Control = $"Player Bar"
 @onready var cursor: ColorRect = ColorRect.new()
+
+var turn_queue: Array
 
 func _ready() -> void:
 	create_threshold_bars()
 	setup_cursor()
+	current_player = turn_queue[0]
 	
 func _process(delta: float) -> void:
 	if Input.is_action_pressed("ui_select"):
