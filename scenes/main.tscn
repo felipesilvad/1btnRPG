@@ -20,12 +20,21 @@ texture = ExtResource("1_wqqjj")
 [node name="Character" parent="." instance=ExtResource("2_c3uvt")]
 visible = false
 
-[node name="Player Bar" type="Control" parent="."]
+[node name="Bar1" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 8.0
 offset_top = 168.0
-offset_right = 160.0
+offset_right = 152.0
+offset_bottom = 176.0
+script = ExtResource("3_fdyik")
+
+[node name="Bar2" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 168.0
+offset_top = 168.0
+offset_right = 312.0
 offset_bottom = 176.0
 script = ExtResource("3_fdyik")
 

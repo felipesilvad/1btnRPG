@@ -6,7 +6,9 @@ extends Area2D
 func _ready() -> void:
 	var char_i = char.instantiate()
 	char_i.side = 2
-	$"../..".turn_queue.append(char_i)
+	char_i.get_node("Sprite2D").flip_h = true
+	$"../..".chars_spots_2.append(char_i)
+	$"../..".turn_queue_2.append(char_i)
 	add_child(char_i)
 
 

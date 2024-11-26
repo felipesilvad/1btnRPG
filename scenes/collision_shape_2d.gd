@@ -1,14 +1,9 @@
-extends Area2D
+extends CollisionShape2D
 
-@export var char: PackedScene
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var char_i = char.instantiate()
-	char_i.side = 1
-	$"../..".chars_spots_1.append(char_i)
-	$"../..".turn_queue_1.append(char_i)
-	add_child(char_i)
+	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

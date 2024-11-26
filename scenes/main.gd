@@ -1,54 +1,71 @@
 extends Node2D
 
-@onready var current_player: Player
-@onready var player_bar: Control = $"Player Bar"
+@onready var current_player_1: Player
+@onready var current_player_2: Player
 @onready var cursor: ColorRect = ColorRect.new()
+@onready var bar_1: Control = $Bar1
+@onready var bar_2: Control = $Bar2
 
-var turn_queue: Array
+var value: float = 0.0
+var chars_spots_1: Array
+var chars_spots_2: Array
+var turn_queue_1: Array
+var turn_queue_2: Array
 
 func _ready() -> void:
-	create_threshold_bars()
-	setup_cursor()
-	current_player = turn_queue[0]
+	create_threshold_bars(bar_1)
+	create_threshold_bars(bar_2)
+	setup_cursor(bar_1)
+	setup_cursor(bar_2)
+	current_player_1 = turn_queue_1[0]
+	current_player_2 = turn_queue_2[0]
 	
 func _process(delta: float) -> void:
+	process_ai(delta)
+	
 	if Input.is_action_pressed("ui_select"):
-		current_player.is_holding = true
-		current_player.hold_time += delta
-		update_cursor()
+		current_player_1.is_holding = true
+		current_player_1.hold_time += delta
+		update_cursor(bar_1)
 	else:
-		if current_player.is_holding:
-			current_player.evaluate_hold_time()
-		current_player.is_holding = false
-		current_player.hold_time = 0.0
+		if current_player_1.is_holding:
+			current_player_1.evaluate_hold_time()
+		current_player_1.is_holding = false
+		current_player_1.hold_time = 0.0
 
-func update_cursor() -> void:
-	var position_x = (current_player.hold_time / current_player.MAX_THRESHOLD) * player_bar.size.x
-	position_x = clamp(position_x, 0, player_bar.size.x)  # Prevent overflow
+func process_ai(delta) -> void:
+	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
+		current_player_2.is_holding = true
+		current_player_2.hold_time += delta
+		print(current_player_2.hold_time)
+		update_cursor(bar_2)
+	else:
+		if current_player_2.is_holding:
+			current_player_2.evaluate_hold_time()
+		current_player_2.is_holding = false
+		current_player_2.hold_time = 0.0
+		
+func update_cursor(bar) -> void:
+	var position_x = (current_player_1.hold_time / current_player_1.MAX_THRESHOLD) * bar.size.x
+	position_x = clamp(position_x, 0, bar.size.x)  # Prevent overflow
 	cursor.position = Vector2(position_x, 0)
 	
-func create_threshold_bars() -> void:
+func create_threshold_bars(bar) -> void:
 	var previous_position: float = 0.0
 
-	for i in current_player.THRESHOLDS.size():
-		var threshold = current_player.THRESHOLDS[i]
+	for i in current_player_1.THRESHOLDS.size():
+		var threshold = current_player_1.THRESHOLDS[i]
 		var rect = ColorRect.new()
 		# Calculate width based on the threshold value
-		var threshold_width = ((threshold["value"] * player_bar.size.x) / current_player.MAX_THRESHOLD) - previous_position
+		var threshold_width = ((threshold["value"] * bar.size.x) / current_player_1.MAX_THRESHOLD) - previous_position
 		rect.position = Vector2(previous_position, 0)
 		previous_position += threshold_width
-
 		# Set size based on threshold width
-		rect.size = Vector2(threshold_width, player_bar.size.y)  # Fill the parent's height
-
+		rect.size = Vector2(threshold_width, bar.size.y)  # Fill the parent's height
 		# Set the color using Modulate
 		rect.modulate = threshold["color"]
-
-		# Optional: Assign a name for debugging
 		rect.name = threshold["action"]
-
-		# Add the TextureRect to the parent node
-		player_bar.add_child(rect)
+		bar.add_child(rect)
 
 func move_to_target(object, start:Vector2, end:Vector2, speed:float):
 	var tween = create_tween()
@@ -56,9 +73,10 @@ func move_to_target(object, start:Vector2, end:Vector2, speed:float):
 	await tween.finished
 	#emit_signal(signal_name)
 
-func setup_cursor() -> void:
+func setup_cursor(bar) -> void:
 	# Set up the cursor node
-	cursor.size = Vector2(1, player_bar.size.y)
+	cursor.z_index = 11
+	cursor.size = Vector2(1, bar.size.y)
 	cursor.modulate = Color.WHITE
 	cursor.position = Vector2(0, 0)
-	player_bar.add_child(cursor)
+	bar.add_child(cursor)
