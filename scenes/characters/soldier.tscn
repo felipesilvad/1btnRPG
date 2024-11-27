@@ -1,9 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://ihvyfrlt24mi"]
+[gd_scene load_steps=16 format=3 uid="uid://dfbfshymqrvcw"]
 
-[ext_resource type="Script" path="res://scenes/character.gd" id="1_c5rvh"]
-[ext_resource type="Texture2D" uid="uid://dl0rcq7qxtb3x" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier(Split Effects)/Soldier.png" id="1_ws4h1"]
-[ext_resource type="Script" path="res://scenes/collision_shape_2d.gd" id="2_7a3mo"]
-[ext_resource type="Script" path="res://scenes/hp_bar.gd" id="4_lgta4"]
+[ext_resource type="Script" path="res://scenes/characters/soldier.gd" id="1_2coc7"]
+[ext_resource type="Script" path="res://scenes/collision_shape_2d.gd" id="2_xl6ft"]
+[ext_resource type="Texture2D" uid="uid://dl0rcq7qxtb3x" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier(Split Effects)/Soldier.png" id="3_naoig"]
+[ext_resource type="Script" path="res://scenes/hp_bar.gd" id="4_fndwj"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jnmru"]
 
@@ -174,15 +174,15 @@ _data = {
 "release": SubResource("Animation_l7bvl")
 }
 
-[node name="Character" type="CharacterBody2D"]
-script = ExtResource("1_c5rvh")
+[node name="Soldier" type="CharacterBody2D"]
+script = ExtResource("1_2coc7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_jnmru")
-script = ExtResource("2_7a3mo")
+script = ExtResource("2_xl6ft")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_ws4h1")
+texture = ExtResource("3_naoig")
 hframes = 9
 vframes = 7
 
@@ -190,7 +190,7 @@ vframes = 7
 libraries = {
 "": SubResource("AnimationLibrary_o5lsd")
 }
-autoplay = "idle"
+autoplay = "hurt"
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -214,4 +214,4 @@ text = "LV2"
 [node name="ProgressBar" type="ProgressBar" parent="Control/VBoxContainer"]
 layout_mode = 2
 show_percentage = false
-script = ExtResource("4_lgta4")
+script = ExtResource("4_fndwj")
