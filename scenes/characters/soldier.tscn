@@ -190,7 +190,7 @@ vframes = 7
 libraries = {
 "": SubResource("AnimationLibrary_o5lsd")
 }
-autoplay = "hurt"
+autoplay = "idle"
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3

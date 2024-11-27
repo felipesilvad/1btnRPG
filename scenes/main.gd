@@ -13,8 +13,8 @@ var turn_queue_1: Array
 var turn_queue_2: Array
 
 func _ready() -> void:
-
-	
+	current_player_1 = turn_queue_1[0]
+	current_player_2 = turn_queue_2[0]
 	create_threshold_bars(bar_1)
 	create_threshold_bars(bar_2)
 	setup_cursor(bar_1)
