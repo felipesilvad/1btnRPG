@@ -11,8 +11,11 @@ func _ready():
 	pass
 
 func _process(delta):
-	position.x += speed * delta
-
+	if user.side == 1:
+		position.x += speed * delta
+	else:
+		position.x -= speed * delta
+	
 	if position.x >= screen_width:
 		position.x = screen_width
 

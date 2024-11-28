@@ -20,6 +20,16 @@ func _ready() -> void:
 	setup_cursor(bar_1)
 	setup_cursor(bar_2)
 	
+func start_next_turn(side):
+	if side ==1:
+		current_player_1 = turn_queue_1[1]
+		create_threshold_bars(bar_1)
+		setup_cursor(bar_1)
+	else:
+		current_player_2 = turn_queue_2[0]
+		create_threshold_bars(bar_2)
+		setup_cursor(bar_2)
+		
 func _process(delta: float) -> void:
 	process_ai(delta)
 	
@@ -30,19 +40,29 @@ func _process(delta: float) -> void:
 	else:
 		if current_player_1.is_holding:
 			current_player_1.evaluate_hold_time()
+			end_turn(1)
 		current_player_1.is_holding = false
 		current_player_1.hold_time = 0.0
 
+func clear_bar(bar):
+	for child in bar.get_children():
+		child.queue_free()
+		
+func end_turn(side):
+	if side == 1:
+		clear_bar(bar_1)
+	
 func process_ai(delta) -> void:
-	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
-		current_player_2.is_holding = true
-		current_player_2.hold_time += delta
-		update_cursor(bar_2)
-	else:
-		if current_player_2.is_holding:
-			current_player_2.evaluate_hold_time()
-		current_player_2.is_holding = false
-		current_player_2.hold_time = 0.0
+	pass
+	#if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
+		#current_player_2.is_holding = true
+		#current_player_2.hold_time += delta
+		#update_cursor(bar_2)
+	#else:
+		#if current_player_2.is_holding:
+			#current_player_2.evaluate_hold_time()
+		#current_player_2.is_holding = false
+		#current_player_2.hold_time = 0.0
 		
 func update_cursor(bar) -> void:
 	var position_x = (current_player_1.hold_time / current_player_1.MAX_THRESHOLD) * bar.size.x

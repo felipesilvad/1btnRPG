@@ -1,9 +1,9 @@
 extends Area2D
 
-@export var char: PackedScene
+@export var char_scene: PackedScene
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var char_i = char.instantiate()
+	var char_i = char_scene.instantiate()
 	char_i.side = 2
 	char_i.get_node("Sprite2D").flip_h = true
 	$"../..".chars_spots_2.append(char_i)

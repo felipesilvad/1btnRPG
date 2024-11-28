@@ -1,7 +1,14 @@
 extends Player
 
-var hitbox_scene:PackedScene = preload("res://scenes/hitbox.tscn")
+var special_hitbox:PackedScene = preload("res://scenes/hitboxes/arrow.tscn")
+var normal_hitbox:PackedScene = preload("res://scenes/hitboxes/slash.tscn")
 var hp: int = 100
+var move_speed: int = 100
+var moving: bool = false
+var moving_back: bool = false
+var attacking: bool = false
+var direction = Vector2(1,0).normalized()
+var original_position: Vector2
 @onready var main: Node2D = $"../../.."
 
 const THRESHOLDS = [
@@ -17,11 +24,40 @@ func _ready() -> void:
 	hp_bar.max_value = hp
 	
 func _process(delta: float) -> void:
-	if hold_time>0:
-		for i in THRESHOLDS.size():
-			if hold_time <= THRESHOLDS[i]["value"] and hold_time > (THRESHOLDS[i-1]["value"]+0.1):
-				if THRESHOLDS[i]["hold"] != "":
-					call(THRESHOLDS[i]["hold"])
+	if moving:
+		direction.x = 1
+		var velocity = direction * move_speed * delta
+		animation_player.play('move')
+		var collision = move_and_collide(velocity)
+		if collision:
+			moving = false
+			attacking = true
+			normal_action()
+			await animation_player.animation_finished
+			moving_back = true
+			attacking = false
+	elif moving_back:
+		direction.x = -1
+		reset_position(delta)
+	else:
+		if hold_time>0:
+			for i in THRESHOLDS.size():
+				if hold_time <= THRESHOLDS[i]["value"] and hold_time > (THRESHOLDS[i-1]["value"]+0.1):
+					if THRESHOLDS[i]["hold"] != "":
+						call(THRESHOLDS[i]["hold"])
+
+func reset_position(delta):
+	animation_player.play('move')
+	get_node("Sprite2D").flip_h = true
+	
+	var velocity = direction * move_speed * delta
+	move_and_collide(velocity)
+	if position.distance_to(original_position) <= 1.0:  # Adjust threshold as needed
+		position = original_position
+		moving_back = false
+		get_node("Sprite2D").flip_h = false
+		animation_player.play('idle')
+		main.start_next_turn(side)
 		
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
@@ -31,12 +67,7 @@ func evaluate_hold_time() -> void:
 	overshoot_action()  # If no threshold is matched, call the overshoot action
 
 func short_press_action() -> void:
-	print(main.chars_spots_2[0].name)
-	#var global_pos = self.to_global(self.position)
-	#var position_local_to_nodeB = main.chars_spots_2[0].to_local(global_pos)
-	var target_position = self.to_local(main.chars_spots_2[0].global_position)
-	move_to_target(self, self.position, target_position, 2, "moved_to_target")
-	moved_to_target.connect(normal_action)
+	moving = true
 	
 func first_long_hold() -> void:
 	animation_player.play("hold_start")
@@ -48,31 +79,22 @@ func special_hold() -> void:
 func first_long_press_action() -> void:
 	animation_player.play("fail")
 	animation_player.queue("idle")
+	main.start_next_turn(side)
 
 func normal_action() -> void:
-	# Move back to the original position
-	var original_position = position
-	var movement = (original_position - global_position).normalized() * 100
-	move_and_collide(movement)
-	#else:
-		## Move in the specified direction
-		#var velocity = Vector2(direction * speed, 0)
-		#var collision = move_and_collide(velocity * delta)
-		#if collision:
-			## Start the return process after a delay
-			#yield(get_tree().create_timer(wait_time), "timeout")
-			#_is_returning = true
 	animation_player.play("attack")
-	animation_player.queue("idle")
+	var hitbox = normal_hitbox.instantiate()
+	hitbox.user = self
+	add_child(hitbox)
 	
 func special_action() -> void:
 	animation_player.play("release")
 	animation_player.queue("idle")
-	var hitbox = hitbox_scene.instantiate()
+	var hitbox = special_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
+	main.start_next_turn(side)
 	
-
 #func second_long_press_action() -> void:
 	#animation_player.play("release")
 	#animation_player.queue("idle")

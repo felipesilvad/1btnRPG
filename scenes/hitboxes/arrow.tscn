@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxe4teb2jrlr4"]
+
+[ext_resource type="Script" path="res://scenes/hitboxes/arrow.gd" id="1_i3fsw"]
+[ext_resource type="Texture2D" uid="uid://4ajjaiylq1c4" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Arrow(Projectile)/Arrow01(32x32).png" id="2_k60ds"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uwvce"]
+
+[node name="hitbox" type="Area2D"]
+script = ExtResource("1_i3fsw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uwvce")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_k60ds")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

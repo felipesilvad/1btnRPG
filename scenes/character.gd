@@ -15,3 +15,9 @@ func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name
 	tween.tween_property(object, "position", end, speed)
 	await tween.finished
 	emit_signal(signal_name)
+
+func flip_sprite():
+	if get_node("Sprite2D").flip_h == true:
+		get_node("Sprite2D").flip_h = false
+	else:
+		get_node("Sprite2D").flip_h = true

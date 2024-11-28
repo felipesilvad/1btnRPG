@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/characters/soldier.gd" id="1_2coc7"]
 [ext_resource type="Script" path="res://scenes/collision_shape_2d.gd" id="2_xl6ft"]
-[ext_resource type="Texture2D" uid="uid://dl0rcq7qxtb3x" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier(Split Effects)/Soldier.png" id="3_naoig"]
+[ext_resource type="Texture2D" uid="uid://cl13afx4r02vo" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier/Soldier.png" id="3_1buei"]
 [ext_resource type="Script" path="res://scenes/hp_bar.gd" id="4_fndwj"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jnmru"]
@@ -147,7 +147,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_l7bvl"]
-length = 0.5
+length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -155,7 +155,7 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.4),
+"times": PackedFloat32Array(0, 0.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [43, 44]
@@ -182,7 +182,7 @@ shape = SubResource("CapsuleShape2D_jnmru")
 script = ExtResource("2_xl6ft")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("3_naoig")
+texture = ExtResource("3_1buei")
 hframes = 9
 vframes = 7
 
