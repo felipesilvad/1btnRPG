@@ -1,7 +1,6 @@
 extends Area2D
 
 @export var char: PackedScene
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var char_i = char.instantiate()

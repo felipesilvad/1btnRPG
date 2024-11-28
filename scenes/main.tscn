@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://8i8g34t2fvvu"]
+[gd_scene load_steps=8 format=3 uid="uid://8i8g34t2fvvu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_uc2rm"]
 [ext_resource type="Texture2D" uid="uid://byhfl2b1kpxts" path="res://Assets/Free Pixel Art Forest/Preview/Background.png" id="1_wqqjj"]
-[ext_resource type="PackedScene" uid="uid://ihvyfrlt24mi" path="res://scenes/character.tscn" id="2_c3uvt"]
 [ext_resource type="Script" path="res://scenes/player_bar.gd" id="3_fdyik"]
 [ext_resource type="Script" path="res://scenes/spot.gd" id="5_wxs4c"]
 [ext_resource type="Script" path="res://scenes/spot2.gd" id="6_htqui"]
@@ -17,9 +16,6 @@ script = ExtResource("1_uc2rm")
 position = Vector2(200, 9.53674e-07)
 scale = Vector2(0.588876, 0.475252)
 texture = ExtResource("1_wqqjj")
-
-[node name="Character" parent="." instance=ExtResource("2_c3uvt")]
-visible = false
 
 [node name="Bar1" type="Control" parent="."]
 layout_mode = 3
@@ -86,6 +82,8 @@ debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 
 [node name="spot3" type="Area2D" parent="player2"]
 position = Vector2(184, 152)
+script = ExtResource("6_htqui")
+char = ExtResource("7_sjd54")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot3"]
 shape = SubResource("CircleShape2D_o0bjm")

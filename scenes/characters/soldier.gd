@@ -2,6 +2,7 @@ extends Player
 
 var hitbox_scene:PackedScene = preload("res://scenes/hitbox.tscn")
 var hp: int = 100
+@onready var main: Node2D = $"../../.."
 
 const THRESHOLDS = [
 	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
@@ -30,8 +31,12 @@ func evaluate_hold_time() -> void:
 	overshoot_action()  # If no threshold is matched, call the overshoot action
 
 func short_press_action() -> void:
-	animation_player.play("attack")
-	animation_player.queue("idle")
+	print(main.chars_spots_2[0].name)
+	#var global_pos = self.to_global(self.position)
+	#var position_local_to_nodeB = main.chars_spots_2[0].to_local(global_pos)
+	var target_position = self.to_local(main.chars_spots_2[0].global_position)
+	move_to_target(self, self.position, target_position, 2, "moved_to_target")
+	moved_to_target.connect(normal_action)
 	
 func first_long_hold() -> void:
 	animation_player.play("hold_start")
@@ -44,6 +49,22 @@ func first_long_press_action() -> void:
 	animation_player.play("fail")
 	animation_player.queue("idle")
 
+func normal_action() -> void:
+	# Move back to the original position
+	var original_position = position
+	var movement = (original_position - global_position).normalized() * 100
+	move_and_collide(movement)
+	#else:
+		## Move in the specified direction
+		#var velocity = Vector2(direction * speed, 0)
+		#var collision = move_and_collide(velocity * delta)
+		#if collision:
+			## Start the return process after a delay
+			#yield(get_tree().create_timer(wait_time), "timeout")
+			#_is_returning = true
+	animation_player.play("attack")
+	animation_player.queue("idle")
+	
 func special_action() -> void:
 	animation_player.play("release")
 	animation_player.queue("idle")
@@ -58,9 +79,3 @@ func special_action() -> void:
 
 func overshoot_action() -> void:
 	special_action()
-
-func move_to_target(object, start:Vector2, end:Vector2, speed:float):
-	var tween = create_tween()
-	tween.tween_property(object, "position", end, speed)
-	await tween.finished
-	#emit_signal(signal_name)

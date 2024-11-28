@@ -37,7 +37,6 @@ func process_ai(delta) -> void:
 	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
 		current_player_2.is_holding = true
 		current_player_2.hold_time += delta
-		print(current_player_2.hold_time)
 		update_cursor(bar_2)
 	else:
 		if current_player_2.is_holding:
