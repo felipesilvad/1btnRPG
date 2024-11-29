@@ -42,7 +42,7 @@ func start_next_turn(side):
 		create_threshold_bars(bar_2)
 		
 func _process(delta: float) -> void:
-	process_ai(delta)
+	#process_ai(delta)
 	
 	if wait_1 == false:
 		if Input.is_action_pressed("ui_select"):
@@ -68,16 +68,15 @@ func end_turn(side):
 	pass
 	
 func process_ai(delta) -> void:
-	pass
-	#if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
-		#current_player_2.is_holding = true
-		#current_player_2.hold_time += delta
-		#update_cursor(bar_2)
-	#else:
-		#if current_player_2.is_holding:
-			#current_player_2.evaluate_hold_time()
-		#current_player_2.is_holding = false
-		#current_player_2.hold_time = 0.0
+	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
+		current_player_2.is_holding = true
+		current_player_2.hold_time += delta
+		update_cursor(bar_2)
+	else:
+		if current_player_2.is_holding:
+			current_player_2.evaluate_hold_time()
+		current_player_2.is_holding = false
+		current_player_2.hold_time = 0.0
 		
 func update_cursor(bar) -> void:
 	var position_x = (current_player_1.hold_time / current_player_1.MAX_THRESHOLD) * bar.size.x

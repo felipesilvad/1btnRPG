@@ -10,7 +10,6 @@ var attacking: bool = false
 var direction = Vector2(1,0).normalized()
 var original_position: Vector2
 @onready var main: Node2D = $"../../.."
-@onready var spot_2: Area2D = $player2/spot2
 
 const THRESHOLDS = [
 	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
@@ -84,16 +83,16 @@ func normal_action() -> void:
 func special_action() -> void:
 	animation_player.play("release")
 	var target_position = to_local(main.get_node('player2').get_node('spot2').global_position)
-	move_to_target(self, position, target_position, 0.7, "done")
+	move_to_target(self, position, Vector2(target_position.x-20, target_position.y), 0.7, "done")
 	var hitbox = normal_hitbox.instantiate()
 	hitbox.user = self
+	hitbox.scale.x = 2
+	hitbox.dmg = roundf(10 + (hold_time*8))
+	hitbox.duration = 0.5
 	add_child(hitbox)
 	done.connect(move_back_on)
 	
 func move_back_on():
-	var hitbox = normal_hitbox.instantiate()
-	hitbox.user = self
-	add_child(hitbox)
 	moving_back = true
 
 #func second_long_press_action() -> void:

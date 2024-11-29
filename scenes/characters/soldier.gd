@@ -105,3 +105,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "release" or anim_name == "fail":
 		animation_player.play("idle")
 		main.start_next_turn(side)
+
+func on_area_body_entered(body):
+	if body.side == 1:
+		print("bullet is working")

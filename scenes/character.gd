@@ -6,6 +6,7 @@ extends CharacterBody2D
 var side: int
 var hold_time: float = 0.0
 var is_holding: bool = false
+var hit_by_special:Player
 
 func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name:String):
 	var tween = create_tween()
