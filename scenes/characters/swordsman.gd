@@ -10,10 +10,11 @@ var attacking: bool = false
 var direction = Vector2(1,0).normalized()
 var original_position: Vector2
 @onready var main: Node2D = $"../../.."
+@onready var spot_2: Area2D = $player2/spot2
 
 const THRESHOLDS = [
 	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
-	{"hold": "first_long_hold", "action": "first_long_press_action", "value": 0.75, "color": Color.INDIAN_RED},
+	#{"hold": "first_long_hold", "action": "first_long_press_action", "value": 0.5, "color": Color.LIGHT_YELLOW},
 	{"hold": "special_hold", "action": "special_action", "value": 1, "color": Color.PALE_GREEN},
 	#{"hold": "", "action": "second_long_press_action", "value": 1, "color": Color.ORANGE}
 ]
@@ -68,16 +69,9 @@ func evaluate_hold_time() -> void:
 
 func short_press_action() -> void:
 	moving = true
-	
-func first_long_hold() -> void:
-	animation_player.play("hold_start")
-	animation_player.queue("hold")
-	
+
 func special_hold() -> void:
 	animation_player.play("hold")
-	
-func first_long_press_action() -> void:
-	animation_player.play("fail")
 
 func normal_action() -> void:
 	animation_player.play("attack")
@@ -87,16 +81,17 @@ func normal_action() -> void:
 	
 func special_action() -> void:
 	animation_player.play("release")
-	var hitbox = special_hitbox.instantiate()
-	hitbox.user = self
-	add_child(hitbox)
+	move_to_target(self, position, Vector2(position.x+20, position.y), 0.7, "done")
+	#var hitbox = normal_hitbox.instantiate()
+	#hitbox.user = self
+	#add_child(hitbox)
 	
 #func second_long_press_action() -> void:
 	#animation_player.play("release")
 	#animation_player.queue("idle")
 
 func overshoot_action() -> void:
-	special_action()
+	animation_player.play("fail")
 
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

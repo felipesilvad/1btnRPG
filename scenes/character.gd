@@ -7,9 +7,6 @@ var side: int
 var hold_time: float = 0.0
 var is_holding: bool = false
 
-signal moved_to_target
-signal moved_back
-
 func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name:String):
 	var tween = create_tween()
 	tween.tween_property(object, "position", end, speed)

@@ -10,7 +10,7 @@ func _ready() -> void:
 	$"../..".turn_queue_2.append(char_i)
 	add_child(char_i)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+#
+## Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta: float) -> void:
+	#pass
