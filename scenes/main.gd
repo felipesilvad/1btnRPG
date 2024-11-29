@@ -26,7 +26,7 @@ func start_next_turn(side):
 		create_threshold_bars(bar_1)
 		setup_cursor(bar_1)
 	else:
-		current_player_2 = turn_queue_2[0]
+		current_player_2 = turn_queue_2[1]
 		create_threshold_bars(bar_2)
 		setup_cursor(bar_2)
 		
@@ -71,7 +71,7 @@ func update_cursor(bar) -> void:
 	
 func create_threshold_bars(bar) -> void:
 	var previous_position: float = 0.0
-
+	
 	for i in current_player_1.THRESHOLDS.size():
 		var threshold = current_player_1.THRESHOLDS[i]
 		var rect = ColorRect.new()
