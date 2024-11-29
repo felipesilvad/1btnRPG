@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dfbfshymqrvcw"]
+[gd_scene load_steps=17 format=3 uid="uid://dfbfshymqrvcw"]
 
 [ext_resource type="Script" path="res://scenes/characters/soldier.gd" id="1_2coc7"]
 [ext_resource type="Script" path="res://scenes/collision_shape_2d.gd" id="2_xl6ft"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://scenes/hp_bar.gd" id="4_fndwj"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jnmru"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7y5n5"]
 
 [sub_resource type="Animation" id="Animation_4uq3o"]
 length = 0.001
@@ -181,6 +183,11 @@ script = ExtResource("1_2coc7")
 shape = SubResource("CapsuleShape2D_jnmru")
 script = ExtResource("2_xl6ft")
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_7y5n5")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_1buei")
 hframes = 9
@@ -211,4 +218,6 @@ layout_mode = 2
 show_percentage = false
 script = ExtResource("4_fndwj")
 
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

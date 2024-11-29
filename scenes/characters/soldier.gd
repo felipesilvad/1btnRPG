@@ -28,16 +28,20 @@ func _process(delta: float) -> void:
 		direction.x = 1
 		var velocity = direction * move_speed * delta
 		animation_player.play('move')
-		var collision = move_and_collide(velocity)
-		if collision:
-			var groups = collision
-			print(groups)
-			moving = false
-			attacking = true
-			normal_action()
-			await animation_player.animation_finished
-			moving_back = true
-			attacking = false
+		position.x += move_speed * delta
+
+		#var collision = move_and_slide()
+		#if collision:
+			#var collider = collision.get_collider()
+			#if collider and collider.side != 1:
+				#return
+			#moving = false
+			#attacking = true
+			#normal_action()
+			#await animation_player.animation_finished
+			#moving_back = true
+			#attacking = false
+			
 	elif moving_back:
 		direction.x = -1
 		reset_position(delta)
@@ -106,6 +110,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 		animation_player.play("idle")
 		main.start_next_turn(side)
 
-func on_area_body_entered(body):
-	if body.side == 1:
-		print("bullet is working")
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.side == 2:
+		print("STOPP")
