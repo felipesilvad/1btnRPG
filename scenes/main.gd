@@ -1,12 +1,14 @@
 extends Node2D
 
-@onready var current_player_1: Player
-@onready var current_player_2: Player
 @onready var cursor: ColorRect = ColorRect.new()
 @onready var bar_1: Control = $Bar1
 @onready var bar_2: Control = $Bar2
 
 var value: float = 0.0
+var current_player_1: Player
+var current_player_2: Player
+var current_player_1_index: int = 0
+var current_player_2_index: int = 0
 var chars_spots_1: Array
 var chars_spots_2: Array
 var turn_queue_1: Array
@@ -20,9 +22,18 @@ func _ready() -> void:
 	setup_cursor(bar_1)
 	setup_cursor(bar_2)
 	
+func set_current_player(side):
+	if side ==1:
+		if turn_queue_1.size() > 0:
+			current_player_1 = turn_queue_1[current_player_1_index]
+			print("Current ally:", current_player_1.name)
+			# Implement logic to activate or highlight the current ally's turn
+		
 func start_next_turn(side):
 	if side ==1:
-		current_player_1 = turn_queue_1[1]
+		# Advance to the next ally in the queue
+		current_player_1_index = (current_player_1_index + 1) % turn_queue_1.size()
+		set_current_player(side)
 		create_threshold_bars(bar_1)
 		setup_cursor(bar_1)
 	else:
@@ -49,8 +60,9 @@ func clear_bar(bar):
 		child.queue_free()
 		
 func end_turn(side):
-	if side == 1:
-		clear_bar(bar_1)
+	#if side == 1:
+		#clear_bar(bar_1)
+	pass
 	
 func process_ai(delta) -> void:
 	pass
