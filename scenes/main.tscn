@@ -36,30 +36,30 @@ offset_right = 312.0
 offset_bottom = 176.0
 script = ExtResource("3_fdyik")
 
-[node name="player" type="Node" parent="."]
+[node name="player1" type="Node" parent="."]
 
-[node name="spot1" type="Area2D" parent="player"]
+[node name="spot1" type="Area2D" parent="player1"]
 position = Vector2(56, 152)
 script = ExtResource("5_wxs4c")
 char = ExtResource("7_sjd54")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player1/spot1"]
 shape = SubResource("CircleShape2D_o0bjm")
 debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 
-[node name="spot2" type="Area2D" parent="player"]
+[node name="spot2" type="Area2D" parent="player1"]
 position = Vector2(96, 152)
 script = ExtResource("5_wxs4c")
 char = ExtResource("6_7gj6s")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player1/spot2"]
 shape = SubResource("CircleShape2D_o0bjm")
 debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 
-[node name="spot3" type="Area2D" parent="player"]
+[node name="spot3" type="Area2D" parent="player1"]
 position = Vector2(136, 152)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="player/spot3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player1/spot3"]
 shape = SubResource("CircleShape2D_o0bjm")
 debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 

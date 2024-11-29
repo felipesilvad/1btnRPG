@@ -20,6 +20,8 @@ const THRESHOLDS = [
 ]
 const MAX_THRESHOLD: float = 1
 
+signal done
+
 func _ready() -> void:
 	hp_bar.value = hp
 	hp_bar.max_value = hp
@@ -52,7 +54,7 @@ func reset_position(delta):
 	get_node("Sprite2D").flip_h = true
 	
 	var velocity = direction * move_speed * delta
-	move_and_collide(velocity)
+	move_without_collision(velocity)
 	if position.distance_to(original_position) <= 1.0:  # Adjust threshold as needed
 		position = original_position
 		moving_back = false
@@ -81,11 +83,19 @@ func normal_action() -> void:
 	
 func special_action() -> void:
 	animation_player.play("release")
-	move_to_target(self, position, Vector2(position.x+20, position.y), 0.7, "done")
-	#var hitbox = normal_hitbox.instantiate()
-	#hitbox.user = self
-	#add_child(hitbox)
+	var target_position = to_local(main.get_node('player2').get_node('spot2').global_position)
+	move_to_target(self, position, target_position, 0.7, "done")
+	var hitbox = normal_hitbox.instantiate()
+	hitbox.user = self
+	add_child(hitbox)
+	done.connect(move_back_on)
 	
+func move_back_on():
+	var hitbox = normal_hitbox.instantiate()
+	hitbox.user = self
+	add_child(hitbox)
+	moving_back = true
+
 #func second_long_press_action() -> void:
 	#animation_player.play("release")
 	#animation_player.queue("idle")

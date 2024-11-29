@@ -18,3 +18,18 @@ func flip_sprite():
 		get_node("Sprite2D").flip_h = false
 	else:
 		get_node("Sprite2D").flip_h = true
+
+func move_without_collision(motion: Vector2):
+	var original_layer = collision_layer
+	var original_mask = collision_mask
+
+	# Disable collisions
+	collision_layer = 0
+	collision_mask = 0
+
+	# Perform movement without collisions
+	move_and_collide(motion)
+
+	# Restore original collision settings
+	collision_layer = original_layer
+	collision_mask = original_mask

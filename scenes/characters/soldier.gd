@@ -30,6 +30,8 @@ func _process(delta: float) -> void:
 		animation_player.play('move')
 		var collision = move_and_collide(velocity)
 		if collision:
+			var groups = collision
+			print(groups)
 			moving = false
 			attacking = true
 			normal_action()
