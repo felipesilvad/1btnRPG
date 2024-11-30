@@ -76,10 +76,12 @@ func end_turn(side):
 		clear_bar(bar_1)
 		wait_1 = true
 		current_player_1.hold_time = 0
+                current_player_1.active = false
 	else:
 		clear_bar(bar_2)
 		wait_2 = true
 		current_player_2.hold_time = 0
+                current_player_2.active = false
 	
 func process_ai(delta) -> void:
 	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
