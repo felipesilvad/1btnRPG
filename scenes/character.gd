@@ -11,6 +11,7 @@ var original_position: Vector2
 var moving: bool = false
 var moving_back: bool = false
 var attacking: bool = false
+var active: bool = false
 var direction = Vector2(1,0).normalized()
 @onready var main: Node2D = $"../../.."
 @onready var sprite: Sprite2D = $Sprite2D
