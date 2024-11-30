@@ -26,22 +26,12 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if moving:
 		direction.x = 1
-		var velocity = direction * move_speed * delta
 		animation_player.play('move')
-		position.x += move_speed * delta
+		if side == 1:
+			position.x += move_speed * delta
+		else:
+			position.x -= move_speed * delta
 
-		#var collision = move_and_slide()
-		#if collision:
-			#var collider = collision.get_collider()
-			#if collider and collider.side != 1:
-				#return
-			#moving = false
-			#attacking = true
-			#normal_action()
-			#await animation_player.animation_finished
-			#moving_back = true
-			#attacking = false
-			
 	elif moving_back:
 		direction.x = -1
 		reset_position(delta)
@@ -55,9 +45,10 @@ func _process(delta: float) -> void:
 func reset_position(delta):
 	animation_player.play('move')
 	get_node("Sprite2D").flip_h = true
-	
-	var velocity = direction * move_speed * delta
-	move_and_collide(velocity)
+	if side == 1:
+		position.x -= move_speed * delta
+	else:
+		position.x += move_speed * delta
 	if position.distance_to(original_position) <= 1.0:  # Adjust threshold as needed
 		position = original_position
 		moving_back = false
@@ -74,6 +65,7 @@ func evaluate_hold_time() -> void:
 
 func short_press_action() -> void:
 	moving = true
+	attacking = true
 	
 func first_long_hold() -> void:
 	animation_player.play("hold_start")
@@ -91,6 +83,13 @@ func normal_action() -> void:
 	hitbox.user = self
 	add_child(hitbox)
 	
+func attack() -> void:
+	moving = false
+	normal_action()
+	await animation_player.animation_finished
+	moving_back = true
+	attacking = false
+
 func special_action() -> void:
 	animation_player.play("release")
 	var hitbox = special_hitbox.instantiate()
@@ -112,5 +111,11 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body.side == 2:
-		print("STOPP")
+	if !attacking:
+		return
+	if side == 1:
+		if body.side == 2:
+			attack()
+	else:
+		if body.side == 1:
+			attack()
