@@ -4,12 +4,6 @@ var special_hitbox:PackedScene = preload("res://scenes/hitboxes/arrow.tscn")
 var normal_hitbox:PackedScene = preload("res://scenes/hitboxes/slash.tscn")
 var hp: int = 100
 var move_speed: int = 100
-var moving: bool = false
-var moving_back: bool = false
-var attacking: bool = false
-var direction = Vector2(1,0).normalized()
-var original_position: Vector2
-@onready var main: Node2D = $"../../.."
 
 const THRESHOLDS = [
 	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
@@ -27,20 +21,12 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	if moving:
-		direction.x = 1
-		var velocity = direction * move_speed * delta
-		animation_player.play('move')
-		var collision = move_and_collide(velocity)
-		if collision:
-			moving = false
-			attacking = true
-			normal_action()
-			await animation_player.animation_finished
-			moving_back = true
-			attacking = false
+		if side == 1:
+			position.x += move_speed * delta
+		else:
+			position.x -= move_speed * delta
 	elif moving_back:
-		direction.x = -1
-		reset_position(delta)
+		reset_position(delta, move_speed)
 	else:
 		if hold_time>0:
 			for i in THRESHOLDS.size():
@@ -48,19 +34,7 @@ func _process(delta: float) -> void:
 					if THRESHOLDS[i]["hold"] != "":
 						call(THRESHOLDS[i]["hold"])
 
-func reset_position(delta):
-	animation_player.play('move')
-	get_node("Sprite2D").flip_h = true
-	
-	var velocity = direction * move_speed * delta
-	move_without_collision(velocity)
-	if position.distance_to(original_position) <= 1.0:  # Adjust threshold as needed
-		position = original_position
-		moving_back = false
-		get_node("Sprite2D").flip_h = false
-		animation_player.play('idle')
-		main.start_next_turn(side)
-		
+
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
 		if hold_time < threshold["value"]:
@@ -70,15 +44,24 @@ func evaluate_hold_time() -> void:
 
 func short_press_action() -> void:
 	moving = true
+	attacking = true
 
 func special_hold() -> void:
 	animation_player.play("hold")
 
+func attack() -> void:
+	moving = false
+	normal_action()
+	await animation_player.animation_finished
+	moving_back = true
+	attacking = false
+	
 func normal_action() -> void:
 	animation_player.play("attack")
 	var hitbox = normal_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
+	main.start_next_turn(side)
 	
 func special_action() -> void:
 	animation_player.play("release")
@@ -91,6 +74,7 @@ func special_action() -> void:
 	hitbox.duration = 0.5
 	add_child(hitbox)
 	done.connect(move_back_on)
+	main.start_next_turn(side)
 	
 func move_back_on():
 	moving_back = true
@@ -101,9 +85,20 @@ func move_back_on():
 
 func overshoot_action() -> void:
 	animation_player.play("fail")
-
+	main.start_next_turn(side)
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "release" or anim_name == "fail":
 		animation_player.play("idle")
-		main.start_next_turn(side)
+		#main.start_next_turn(side)
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if !attacking:
+		return
+	if side == 1:
+		if body.side == 2:
+			attack()
+	else:
+		if body.side == 1:
+			attack()

@@ -7,6 +7,14 @@ var side: int
 var hold_time: float = 0.0
 var is_holding: bool = false
 var hit_by_special:Player
+var original_position: Vector2
+var moving: bool = false
+var moving_back: bool = false
+var attacking: bool = false
+var direction = Vector2(1,0).normalized()
+@onready var main: Node2D = $"../../.."
+@onready var sprite: Sprite2D = $Sprite2D
+var main_sm: LimboHSM
 
 func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name:String):
 	var tween = create_tween()
@@ -20,17 +28,22 @@ func flip_sprite():
 	else:
 		get_node("Sprite2D").flip_h = true
 
-func move_without_collision(motion: Vector2):
-	var original_layer = collision_layer
-	var original_mask = collision_mask
-
-	# Disable collisions
-	collision_layer = 0
-	collision_mask = 0
-
-	# Perform movement without collisions
-	move_and_collide(motion)
-
-	# Restore original collision settings
-	collision_layer = original_layer
-	collision_mask = original_mask
+func flash_white():
+	# Temporarily make the sprite flash white
+	sprite.modulate = Color(5, 5, 5, 1)  # Boost brightness to simulate a white flash
+	await get_tree().create_timer(0.1).timeout  # Flash duration
+	sprite.modulate = Color(1, 1, 1, 1)
+	
+func reset_position(delta, move_speed):
+	animation_player.play('move')
+	get_node("Sprite2D").flip_h = true
+	
+	if side == 1:
+		position.x -= move_speed * delta
+	else:
+		position.x += move_speed * delta
+		
+	if position.distance_to(original_position) <= 2: 
+		position = original_position
+		get_node("Sprite2D").flip_h = false
+		main_sm.dispatch(&"to_idle")

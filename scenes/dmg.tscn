@@ -1,8 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg2iadsvrwexd"]
+[gd_scene load_steps=5 format=3 uid="uid://bg2iadsvrwexd"]
 
 [ext_resource type="Script" path="res://scenes/dmg.gd" id="1_xma2w"]
+[ext_resource type="Shader" path="res://scenes/text.gdshader" id="2_fqlx6"]
+[ext_resource type="FontFile" uid="uid://bid0yatrsrhnd" path="res://Assets/font.ttf" id="3_m213u"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_efdsw"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bd4js"]
+shader = ExtResource("2_fqlx6")
 
 [node name="dmg" type="Control"]
 layout_mode = 3
@@ -14,8 +17,12 @@ grow_vertical = 2
 script = ExtResource("1_xma2w")
 
 [node name="Label" type="Label" parent="."]
-material = SubResource("CanvasItemMaterial_efdsw")
+material = SubResource("ShaderMaterial_bd4js")
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_right = 28.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.430287, 0.530307, 0.807843)
+theme_override_colors/font_outline_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_m213u")
 text = "10"
+horizontal_alignment = 1

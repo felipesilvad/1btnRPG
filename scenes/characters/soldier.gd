@@ -4,12 +4,6 @@ var special_hitbox:PackedScene = preload("res://scenes/hitboxes/arrow.tscn")
 var normal_hitbox:PackedScene = preload("res://scenes/hitboxes/slash.tscn")
 var hp: int = 100
 var move_speed: int = 100
-var moving: bool = false
-var moving_back: bool = false
-var attacking: bool = false
-var direction = Vector2(1,0).normalized()
-var original_position: Vector2
-@onready var main: Node2D = $"../../.."
 
 const THRESHOLDS = [
 	{"hold": "", "action": "short_press_action", "value": 0.1, "color": Color.LIGHT_GRAY},
@@ -20,42 +14,71 @@ const THRESHOLDS = [
 const MAX_THRESHOLD: float = 1
 
 func _ready() -> void:
+	init_sm()
 	hp_bar.value = hp
 	hp_bar.max_value = hp
 	
 func _process(delta: float) -> void:
-	if moving:
-		direction.x = 1
-		animation_player.play('move')
-		if side == 1:
-			position.x += move_speed * delta
-		else:
-			position.x -= move_speed * delta
+	print(main_sm.get_active_state())
+	if hold_time>0:
+		for i in THRESHOLDS.size():
+			if hold_time <= THRESHOLDS[i]["value"] and hold_time > (THRESHOLDS[i-1]["value"]+0.1):
+				if THRESHOLDS[i]["hold"] != "":
+					call(THRESHOLDS[i]["hold"])
 
-	elif moving_back:
-		direction.x = -1
-		reset_position(delta)
-	else:
-		if hold_time>0:
-			for i in THRESHOLDS.size():
-				if hold_time <= THRESHOLDS[i]["value"] and hold_time > (THRESHOLDS[i-1]["value"]+0.1):
-					if THRESHOLDS[i]["hold"] != "":
-						call(THRESHOLDS[i]["hold"])
+func init_sm():
+	main_sm = LimboHSM.new()
+	add_child(main_sm)
+	
+	var idle_state = LimboState.new().named('idle').call_on_enter(idle_start).call_on_update(idle_update)
+	var walk_state = LimboState.new().named('walk').call_on_enter(walk_start).call_on_update(walk_update)
+	var walk_back_state = LimboState.new().named('walk_back').call_on_enter(walk_back_start).call_on_update(walk_back_update)
+	var attack_state = LimboState.new().named('attack').call_on_enter(attack_start).call_on_update(attack_update)
+	
+	main_sm.add_child(idle_state)
+	main_sm.add_child(walk_state)
+	main_sm.add_child(walk_back_state)
+	main_sm.add_child(attack_state)
+	
+	main_sm.initial_state = idle_state
+	
+	main_sm.add_transition(idle_state, walk_state, &"to_walk")
+	main_sm.add_transition(walk_state, attack_state, &"to_attack")
+	main_sm.add_transition(attack_state, walk_back_state, &"to_walk_back")
+	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_idle")
+	main_sm.initialize(self)
+	main_sm.set_active(true)
 
-func reset_position(delta):
+func idle_start():
+	animation_player.play("idle")
+func idle_update(_delta:float):
+	pass
+
+func walk_start():
+	pass
+func walk_update(delta:float):
 	animation_player.play('move')
-	get_node("Sprite2D").flip_h = true
 	if side == 1:
-		position.x -= move_speed * delta
-	else:
 		position.x += move_speed * delta
-	if position.distance_to(original_position) <= 1.0:  # Adjust threshold as needed
-		position = original_position
-		moving_back = false
-		get_node("Sprite2D").flip_h = false
-		animation_player.play('idle')
-		main.start_next_turn(side)
-		
+	else:
+		position.x -= move_speed * delta
+
+func walk_back_start():
+	pass
+func walk_back_update(delta:float):
+	pass
+	reset_position(delta, move_speed)
+
+func attack_start():
+	attacking = false
+	animation_player.play("attack")
+	var hitbox = normal_hitbox.instantiate()
+	hitbox.user = self
+	add_child(hitbox)
+	
+func attack_update(_delta:float):
+	pass
+
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
 		if hold_time < threshold["value"]:
@@ -64,8 +87,8 @@ func evaluate_hold_time() -> void:
 	overshoot_action()  # If no threshold is matched, call the overshoot action
 
 func short_press_action() -> void:
-	moving = true
 	attacking = true
+	main_sm.dispatch(&"to_walk")
 	
 func first_long_hold() -> void:
 	animation_player.play("hold_start")
@@ -76,25 +99,14 @@ func special_hold() -> void:
 	
 func first_long_press_action() -> void:
 	animation_player.play("fail")
-
-func normal_action() -> void:
-	animation_player.play("attack")
-	var hitbox = normal_hitbox.instantiate()
-	hitbox.user = self
-	add_child(hitbox)
-	
-func attack() -> void:
-	moving = false
-	normal_action()
-	await animation_player.animation_finished
-	moving_back = true
-	attacking = false
+	main.start_next_turn(side)	
 
 func special_action() -> void:
 	animation_player.play("release")
 	var hitbox = special_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
+	main.start_next_turn(side)
 	
 #func second_long_press_action() -> void:
 	#animation_player.play("release")
@@ -105,17 +117,20 @@ func overshoot_action() -> void:
 
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "attack":
+		main.start_next_turn(side)
+		main_sm.dispatch(&"to_walk_back")
+		print("WORK MAN")
 	if anim_name == "release" or anim_name == "fail":
 		animation_player.play("idle")
-		main.start_next_turn(side)
-
+		#main.start_next_turn(side)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if !attacking:
 		return
 	if side == 1:
 		if body.side == 2:
-			attack()
+			main_sm.dispatch(&"to_attack")
 	else:
 		if body.side == 1:
-			attack()
+			main_sm.dispatch(&"to_attack")
