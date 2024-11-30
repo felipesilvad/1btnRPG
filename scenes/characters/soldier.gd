@@ -31,14 +31,17 @@ func init_sm():
 	add_child(main_sm)
 	
 	var idle_state = LimboState.new().named('idle').call_on_enter(idle_start).call_on_update(idle_update)
-	var walk_state = LimboState.new().named('walk').call_on_enter(walk_start).call_on_update(walk_update)
-	var walk_back_state = LimboState.new().named('walk_back').call_on_enter(walk_back_start).call_on_update(walk_back_update)
-	var attack_state = LimboState.new().named('attack').call_on_enter(attack_start).call_on_update(attack_update)
-	
 	main_sm.add_child(idle_state)
+	var walk_state = LimboState.new().named('walk').call_on_enter(walk_start).call_on_update(walk_update)
 	main_sm.add_child(walk_state)
+	var walk_back_state = LimboState.new().named('walk_back').call_on_enter(walk_back_start).call_on_update(walk_back_update)
 	main_sm.add_child(walk_back_state)
+	var attack_state = LimboState.new().named('attack').call_on_enter(attack_start).call_on_update(attack_update)
 	main_sm.add_child(attack_state)
+	var ready_state = LimboState.new().named('ready').call_on_enter(ready_start).call_on_update(ready_update)
+	main_sm.add_child(ready_state)
+	var hurt_state = LimboState.new().named('hurt').call_on_enter(hurt_start).call_on_update(hurt_update)
+	main_sm.add_child(hurt_state)
 	
 	main_sm.initial_state = idle_state
 	
@@ -46,6 +49,7 @@ func init_sm():
 	main_sm.add_transition(walk_state, attack_state, &"to_attack")
 	main_sm.add_transition(attack_state, walk_back_state, &"to_walk_back")
 	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_idle")
+	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_hurt")
 	main_sm.initialize(self)
 	main_sm.set_active(true)
 
@@ -75,8 +79,22 @@ func attack_start():
 	var hitbox = normal_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
-	
 func attack_update(_delta:float):
+	pass
+
+func ready_start():
+	pass
+func ready_update(_delta:float):
+	pass
+	
+func hurt_start():
+	animation_player.play('hurt')
+	flash_white()
+	await get_tree().create_timer(0.4).timeout
+	#get PREVIUS STATE
+	#animation_player.queue('idle')
+	
+func hurt_update(_delta:float):
 	pass
 
 func evaluate_hold_time() -> void:
@@ -120,7 +138,6 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "attack":
 		main.start_next_turn(side)
 		main_sm.dispatch(&"to_walk_back")
-		print("WORK MAN")
 	if anim_name == "release" or anim_name == "fail":
 		animation_player.play("idle")
 		#main.start_next_turn(side)

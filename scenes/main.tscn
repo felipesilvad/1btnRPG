@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://8i8g34t2fvvu"]
+[gd_scene load_steps=8 format=3 uid="uid://8i8g34t2fvvu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_uc2rm"]
 [ext_resource type="Texture2D" uid="uid://byhfl2b1kpxts" path="res://Assets/Free Pixel Art Forest/Preview/Background.png" id="1_wqqjj"]
 [ext_resource type="Script" path="res://scenes/player_bar.gd" id="3_fdyik"]
 [ext_resource type="Script" path="res://scenes/spot.gd" id="5_wxs4c"]
-[ext_resource type="PackedScene" uid="uid://np1cg07ua286" path="res://scenes/characters/swordsman.tscn" id="6_7gj6s"]
 [ext_resource type="Script" path="res://scenes/spot2.gd" id="6_htqui"]
 [ext_resource type="PackedScene" uid="uid://dfbfshymqrvcw" path="res://scenes/characters/soldier.tscn" id="7_sjd54"]
 
@@ -50,7 +49,7 @@ debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 [node name="spot2" type="Area2D" parent="player1"]
 position = Vector2(96, 152)
 script = ExtResource("5_wxs4c")
-char = ExtResource("6_7gj6s")
+char = ExtResource("7_sjd54")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player1/spot2"]
 shape = SubResource("CircleShape2D_o0bjm")
