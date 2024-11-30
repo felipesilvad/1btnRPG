@@ -16,10 +16,12 @@ var wait_1: bool = false
 var wait_2: bool = false
 
 func _ready() -> void:
-	current_player_1 = turn_queue_1[0]
-	current_player_2 = turn_queue_2[0]
+	# current_player_1 = turn_queue_1[0]
+	# current_player_2 = turn_queue_2[0]
+        set_current_player(1)
+        set_current_player(2)
 	create_threshold_bars(bar_1, current_player_1)
-	create_threshold_bars(bar_2, current_player_1)
+	create_threshold_bars(bar_2, current_player_2)
 	setup_cursor(bar_1)
 	setup_cursor(bar_2)
 	
@@ -27,10 +29,12 @@ func set_current_player(side):
 	if side ==1:
 		if turn_queue_1.size() > 0:
 			current_player_1 = turn_queue_1[current_player_1_index]
+                        current_player_1.active = true
 			current_player_1.hold_time = 0
 	else:
 		if turn_queue_2.size() > 0:
 			current_player_2 = turn_queue_2[current_player_2_index]
+                        current_player_2.active = true
 			current_player_2.hold_time = 0
 
 func start_next_turn(side):
