@@ -30,21 +30,31 @@ func flip_sprite():
 		get_node("Sprite2D").flip_h = true
 
 func flash_white():
-	# Temporarily make the sprite flash white
 	sprite.modulate = Color(5, 5, 5, 1)  # Boost brightness to simulate a white flash
 	await get_tree().create_timer(0.1).timeout  # Flash duration
 	sprite.modulate = Color(1, 1, 1, 1)
 	
 func reset_position(delta, move_speed):
-	animation_player.play('move')
-	get_node("Sprite2D").flip_h = true
-	
-	if side == 1:
-		position.x -= move_speed * delta
-	else:
-		position.x += move_speed * delta
+	if position.distance_to(original_position) > 2: 
+		animation_player.play('move')
+		if side == 1:
+			get_node("Sprite2D").flip_h = true
+		else:
+			get_node("Sprite2D").flip_h = false
+		
+		if side == 1:
+			position.x -= move_speed * delta
+		else:
+			position.x += move_speed * delta
 		
 	if position.distance_to(original_position) <= 2: 
 		position = original_position
-		get_node("Sprite2D").flip_h = false
+		if side == 1:
+			get_node("Sprite2D").flip_h = false
+		else:
+			get_node("Sprite2D").flip_h = true
+			
 		main_sm.dispatch(&"to_idle")
+		print(active)
+		if active:
+			main.start_next_turn(1)

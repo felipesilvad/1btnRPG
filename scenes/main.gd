@@ -18,8 +18,8 @@ var wait_2: bool = false
 func _ready() -> void:
 	# current_player_1 = turn_queue_1[0]
 	# current_player_2 = turn_queue_2[0]
-        set_current_player(1)
-        set_current_player(2)
+	set_current_player(1)
+	set_current_player(2)
 	create_threshold_bars(bar_1, current_player_1)
 	create_threshold_bars(bar_2, current_player_2)
 	setup_cursor(bar_1)
@@ -29,12 +29,12 @@ func set_current_player(side):
 	if side ==1:
 		if turn_queue_1.size() > 0:
 			current_player_1 = turn_queue_1[current_player_1_index]
-                        current_player_1.active = true
+			current_player_1.active = true
 			current_player_1.hold_time = 0
 	else:
 		if turn_queue_2.size() > 0:
 			current_player_2 = turn_queue_2[current_player_2_index]
-                        current_player_2.active = true
+			current_player_2.active = true
 			current_player_2.hold_time = 0
 
 func start_next_turn(side):
@@ -53,7 +53,7 @@ func start_next_turn(side):
 		wait_2 = false
 		
 func _process(delta: float) -> void:
-	#process_ai(delta)
+	process_ai(delta)
 	
 	if wait_1 == false:
 		if Input.is_action_pressed("ui_select"):
@@ -76,12 +76,12 @@ func end_turn(side):
 		clear_bar(bar_1)
 		wait_1 = true
 		current_player_1.hold_time = 0
-                current_player_1.active = false
+		current_player_1.active = false
 	else:
 		clear_bar(bar_2)
 		wait_2 = true
 		current_player_2.hold_time = 0
-                current_player_2.active = false
+		current_player_2.active = false
 	
 func process_ai(delta) -> void:
 	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):

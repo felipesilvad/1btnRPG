@@ -25,6 +25,6 @@ func stop_moving():
 func _on_body_entered(body: Node2D) -> void:
 	if body.side != user.side:
 		body.hp_bar.value = body.hp_bar.value - dmg
+		body.main_sm.dispatch(&"to_hurt")
 		show_dmg(body)
-		
 		stop_moving()

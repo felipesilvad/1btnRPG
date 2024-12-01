@@ -19,7 +19,7 @@ func _ready() -> void:
 	hp_bar.max_value = hp
 	
 func _process(delta: float) -> void:
-	print(main_sm.get_active_state())
+	#print(main_sm.get_active_state())
 	if hold_time>0:
 		for i in THRESHOLDS.size():
 			if hold_time <= THRESHOLDS[i]["value"] and hold_time > (THRESHOLDS[i-1]["value"]+0.1):
@@ -49,7 +49,7 @@ func init_sm():
 	main_sm.add_transition(walk_state, attack_state, &"to_attack")
 	main_sm.add_transition(attack_state, walk_back_state, &"to_walk_back")
 	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_idle")
-	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_hurt")
+	main_sm.add_transition(main_sm.ANYSTATE, hurt_state, &"to_hurt")
 	main_sm.initialize(self)
 	main_sm.set_active(true)
 
@@ -70,7 +70,6 @@ func walk_update(delta:float):
 func walk_back_start():
 	pass
 func walk_back_update(delta:float):
-	pass
 	reset_position(delta, move_speed)
 
 func attack_start():
@@ -79,6 +78,7 @@ func attack_start():
 	var hitbox = normal_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
+	
 func attack_update(_delta:float):
 	pass
 
@@ -90,12 +90,14 @@ func ready_update(_delta:float):
 func hurt_start():
 	animation_player.play('hurt')
 	flash_white()
-	await get_tree().create_timer(0.4).timeout
-	#get PREVIUS STATE
-	#animation_player.queue('idle')
 	
-func hurt_update(_delta:float):
-	pass
+func hurt_update(delta:float):
+	if active:
+		main.start_next_turn(side)
+		print("1why")
+	else:
+		await get_tree().create_timer(0.4).timeout
+		reset_position(delta, move_speed)
 
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
@@ -133,13 +135,13 @@ func special_action() -> void:
 func overshoot_action() -> void:
 	special_action()
 
-
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "attack":
 		main.start_next_turn(side)
 		main_sm.dispatch(&"to_walk_back")
 	if anim_name == "release" or anim_name == "fail":
-		animation_player.play("idle")
+		main_sm.dispatch(&"to_idle")
+		animation_player.play('idle')
 		#main.start_next_turn(side)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
