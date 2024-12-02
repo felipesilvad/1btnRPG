@@ -68,8 +68,9 @@ func walk_update(delta:float):
 		position.x -= move_speed * delta
 
 func walk_back_start():
-	pass
+	print("WALKBACK")
 func walk_back_update(delta:float):
+	print("WTFFF")
 	reset_position(delta, move_speed)
 
 func attack_start():

@@ -16,6 +16,7 @@ var wait_1: bool = false
 var wait_2: bool = false
 
 func _ready() -> void:
+	print("WTF")
 	# current_player_1 = turn_queue_1[0]
 	# current_player_2 = turn_queue_2[0]
 	set_current_player(1)

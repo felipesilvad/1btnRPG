@@ -35,7 +35,8 @@ func flash_white():
 	sprite.modulate = Color(1, 1, 1, 1)
 	
 func reset_position(delta, move_speed):
-	if position.distance_to(original_position) > 2: 
+	if position.distance_to(original_position) > 2:
+		print("far")
 		animation_player.play('move')
 		if side == 1:
 			get_node("Sprite2D").flip_h = true
@@ -48,6 +49,7 @@ func reset_position(delta, move_speed):
 			position.x += move_speed * delta
 		
 	if position.distance_to(original_position) <= 2: 
+		print("close")
 		position = original_position
 		if side == 1:
 			get_node("Sprite2D").flip_h = false
