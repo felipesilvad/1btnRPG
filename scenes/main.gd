@@ -16,7 +16,6 @@ var wait_1: bool = false
 var wait_2: bool = false
 
 func _ready() -> void:
-	print("WTF")
 	# current_player_1 = turn_queue_1[0]
 	# current_player_2 = turn_queue_2[0]
 	set_current_player(1)
@@ -25,6 +24,9 @@ func _ready() -> void:
 	create_threshold_bars(bar_2, current_player_2)
 	setup_cursor(bar_1)
 	setup_cursor(bar_2)
+	
+	await get_tree().create_timer(0.2).timeout
+	current_player_2.is_holding = true
 	
 func set_current_player(side):
 	if side ==1:
@@ -39,7 +41,7 @@ func set_current_player(side):
 			current_player_2.hold_time = 0
 
 func start_next_turn(side):
-	print('next turn')
+	print('next turn', side)
 	await get_tree().create_timer(0.2).timeout
 	if side ==1:
 		current_player_1.active = false
@@ -55,8 +57,12 @@ func start_next_turn(side):
 		create_threshold_bars(bar_2, current_player_2)
 		wait_2 = false
 		
+#		GET RANDOM TIME TO START HOLDING
+		await get_tree().create_timer(0.5).timeout
+		current_player_2.is_holding = true
+		
 func _process(delta: float) -> void:
-	process_ai(delta)
+	#process_ai(delta)
 	
 	if wait_1 == false:
 		if Input.is_action_pressed("ui_select"):
@@ -66,16 +72,22 @@ func _process(delta: float) -> void:
 		else:
 			if current_player_1.is_holding:
 				current_player_1.evaluate_hold_time()
-				end_turn(1)
 			current_player_1.is_holding = false
 			current_player_1.hold_time = 0.0
 			update_cursor(bar_1, current_player_1)
 
 func clear_bar(bar):
-	bar.get_node('bar').queue_free()
+	#bar.get_node('bar').queue_free()
+	for child in get_children():
+		if child is Control:
+			remove_child(child)
+			child.queue_free()
+	#if bar == bar_1:
+		#print('cleared')
 		
 func end_turn(side):
 	if side == 1:
+		print("EEND")
 		clear_bar(bar_1)
 		wait_1 = true
 		current_player_1.hold_time = 0
@@ -85,14 +97,13 @@ func end_turn(side):
 		current_player_2.hold_time = 0
 	
 func process_ai(delta) -> void:
-	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):
-		current_player_2.is_holding = true
-		current_player_2.hold_time += delta
-		update_cursor(bar_2, current_player_2)
+	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.1):
+		if current_player_2.is_holding:
+			current_player_2.hold_time += delta
+			update_cursor(bar_2, current_player_2)
 	else:
 		if current_player_2.is_holding:
 			current_player_2.evaluate_hold_time()
-			end_turn(2)
 		current_player_2.is_holding = false
 		current_player_2.hold_time = 0.0
 		

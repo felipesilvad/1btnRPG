@@ -48,7 +48,7 @@ func init_sm():
 	
 	main_sm.add_transition(idle_state, walk_state, &"to_walk")
 	main_sm.add_transition(walk_state, attack_state, &"to_attack")
-	main_sm.add_transition(attack_state, walk_back_state, &"to_walk_back")
+	main_sm.add_transition(main_sm.ANYSTATE, walk_back_state, &"to_walk_back")
 	main_sm.add_transition(main_sm.ANYSTATE, idle_state, &"to_idle")
 	main_sm.add_transition(main_sm.ANYSTATE, hurt_state, &"to_hurt")
 	main_sm.initialize(self)
@@ -60,7 +60,7 @@ func idle_update(_delta:float):
 	pass
 
 func walk_start():
-	pass
+	on_spot = false
 func walk_update(delta:float):
 	animation_player.play('move')
 	if side == 1:
@@ -69,9 +69,8 @@ func walk_update(delta:float):
 		position.x -= move_speed * delta
 
 func walk_back_start():
-	print("WALKBACK")
+	pass
 func walk_back_update(delta:float):
-	print("WTFFF")
 	reset_position(delta, move_speed)
 
 func attack_start():
@@ -101,9 +100,10 @@ func hurt_update(delta:float):
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
 		if hold_time < threshold["value"]:
-			call(threshold["action"])  # Dynamically call the associated function
-			return  # Exit once the correct action is called
-	overshoot_action()  # If no threshold is matched, call the overshoot action
+			call(threshold["action"])
+			main.end_turn(side)
+			return
+	overshoot_action()
 
 func short_press_action() -> void:
 	attacking = true

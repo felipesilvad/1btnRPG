@@ -12,6 +12,7 @@ var moving: bool = false
 var moving_back: bool = false
 var attacking: bool = false
 var active: bool = false
+var on_spot: bool = true
 var direction = Vector2(1,0).normalized()
 @onready var main: Node2D = $"../../.."
 @onready var sprite: Sprite2D = $Sprite2D
@@ -35,7 +36,9 @@ func flash_white():
 	sprite.modulate = Color(1, 1, 1, 1)
 	
 func reset_position(delta, move_speed):
-	if position.distance_to(original_position) > 2:
+	if on_spot:
+		main_sm.dispatch(&"to_idle")
+	else:
 		animation_player.play('move')
 		if side == 1:
 			get_node("Sprite2D").flip_h = true
@@ -47,8 +50,9 @@ func reset_position(delta, move_speed):
 		else:
 			position.x += move_speed * delta
 		
-	if position.distance_to(original_position) <= 2: 
+	if position.distance_to(original_position) <= 2:
 		position = original_position
+		on_spot = true
 		if side == 1:
 			get_node("Sprite2D").flip_h = false
 		else:
