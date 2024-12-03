@@ -19,7 +19,7 @@ func _ready() -> void:
 	hp_bar.value = hp
 	hp_bar.max_value = hp
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	#print(main_sm.get_active_state())
 	if hold_time>0:
 		for i in THRESHOLDS.size():
@@ -94,14 +94,14 @@ func hurt_start():
 	await get_tree().create_timer(0.4).timeout
 	main_sm.dispatch(&"to_walk_back")
 	
-func hurt_update(delta:float):
+func hurt_update(_delta:float):
 	pass
 
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
 		if hold_time < threshold["value"]:
 			call(threshold["action"])
-			main.end_turn(side)
+			main.end_turn()
 			return
 	overshoot_action()
 
@@ -112,20 +112,20 @@ func short_press_action() -> void:
 func first_long_hold() -> void:
 	animation_player.play("hold_start")
 	animation_player.queue("hold")
-	
+	$special.play()
 func special_hold() -> void:
 	animation_player.play("hold")
 	
 func first_long_press_action() -> void:
 	animation_player.play("fail")
-	main.start_next_turn(side)	
+	main.start_next_turn()
 
 func special_action() -> void:
 	animation_player.play("release")
 	var hitbox = special_hitbox.instantiate()
 	hitbox.user = self
 	add_child(hitbox)
-	main.start_next_turn(side)
+	main.start_next_turn()
 	
 #func second_long_press_action() -> void:
 	#animation_player.play("release")
@@ -136,12 +136,12 @@ func overshoot_action() -> void:
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "attack":
-		main.start_next_turn(side)
+		main.start_next_turn()
 		main_sm.dispatch(&"to_walk_back")
 	if anim_name == "release" or anim_name == "fail":
 		main_sm.dispatch(&"to_idle")
 		animation_player.play('idle')
-		#main.start_next_turn(side)
+		#main.start_next_turn()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if !attacking:

@@ -18,11 +18,11 @@ var direction = Vector2(1,0).normalized()
 @onready var sprite: Sprite2D = $Sprite2D
 var main_sm: LimboHSM
 
-func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name:String):
-	var tween = create_tween()
-	tween.tween_property(object, "position", end, speed)
-	await tween.finished
-	emit_signal(signal_name)
+#func move_to_target(object, start:Vector2, end:Vector2, speed:float, signal_name:String):
+	#var tween = create_tween()
+	#tween.tween_property(object, "position", end, speed)
+	#await tween.finished
+	#emit_signal(signal_name)
 
 func flip_sprite():
 	if get_node("Sprite2D").flip_h == true:
@@ -60,4 +60,4 @@ func reset_position(delta, move_speed):
 			
 		main_sm.dispatch(&"to_idle")
 		if active:
-			main.start_next_turn(1)
+			main.start_next_turn()

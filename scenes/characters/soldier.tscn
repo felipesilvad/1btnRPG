@@ -1,9 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://dfbfshymqrvcw"]
+[gd_scene load_steps=19 format=3 uid="uid://dfbfshymqrvcw"]
 
 [ext_resource type="Script" path="res://scenes/characters/soldier.gd" id="1_2coc7"]
 [ext_resource type="Script" path="res://scenes/collision_shape_2d.gd" id="2_xl6ft"]
 [ext_resource type="Texture2D" uid="uid://cl13afx4r02vo" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier/Soldier.png" id="3_1buei"]
+[ext_resource type="Texture2D" uid="uid://d2bkxmnbwe3f3" path="res://Assets/Tiny RPG Character Asset Pack v1.03 -Full 20 Characters/Characters(100x100)/Soldier/Soldier/Shadow sprites/Soldier-Shadow.png" id="3_shast"]
 [ext_resource type="Script" path="res://scenes/hp_bar.gd" id="4_fndwj"]
+[ext_resource type="AudioStream" uid="uid://cwtri7rjn0m2p" path="res://Assets/Sounds/ARROW_1A_TS.wav" id="6_e0h6y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jnmru"]
 
@@ -188,6 +190,11 @@ script = ExtResource("2_xl6ft")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CapsuleShape2D_7y5n5")
 
+[node name="Circle" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(0, 0, 1, 0.615686)
+texture = ExtResource("3_shast")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_1buei")
 hframes = 9
@@ -217,6 +224,9 @@ offset_bottom = 16.0
 layout_mode = 2
 show_percentage = false
 script = ExtResource("4_fndwj")
+
+[node name="special" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_e0h6y")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
