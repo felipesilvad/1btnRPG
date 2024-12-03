@@ -36,7 +36,6 @@ func flash_white():
 	
 func reset_position(delta, move_speed):
 	if position.distance_to(original_position) > 2:
-		print("far")
 		animation_player.play('move')
 		if side == 1:
 			get_node("Sprite2D").flip_h = true
@@ -49,7 +48,6 @@ func reset_position(delta, move_speed):
 			position.x += move_speed * delta
 		
 	if position.distance_to(original_position) <= 2: 
-		print("close")
 		position = original_position
 		if side == 1:
 			get_node("Sprite2D").flip_h = false
@@ -57,6 +55,5 @@ func reset_position(delta, move_speed):
 			get_node("Sprite2D").flip_h = true
 			
 		main_sm.dispatch(&"to_idle")
-		print(active)
 		if active:
 			main.start_next_turn(1)

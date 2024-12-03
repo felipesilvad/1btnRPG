@@ -75,8 +75,6 @@ debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 
 [node name="spot2" type="Area2D" parent="player2"]
 position = Vector2(224, 152)
-script = ExtResource("6_htqui")
-char_scene = ExtResource("7_sjd54")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot2"]
 shape = SubResource("CircleShape2D_o0bjm")
@@ -84,8 +82,6 @@ debug_color = Color(1.05888e-06, 0.618392, 0.57844, 0.42)
 
 [node name="spot3" type="Area2D" parent="player2"]
 position = Vector2(184, 152)
-script = ExtResource("6_htqui")
-char_scene = ExtResource("7_sjd54")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player2/spot3"]
 shape = SubResource("CircleShape2D_o0bjm")

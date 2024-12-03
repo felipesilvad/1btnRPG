@@ -42,11 +42,13 @@ func start_next_turn(side):
 	print('next turn')
 	await get_tree().create_timer(0.2).timeout
 	if side ==1:
+		current_player_1.active = false
 		current_player_1_index = (current_player_1_index + 1) % turn_queue_1.size()
 		set_current_player(side)
 		create_threshold_bars(bar_1,current_player_1)
 		wait_1 = false
 	else:
+		current_player_2.active = false
 		await get_tree().create_timer(0.2).timeout
 		current_player_2_index = (current_player_2_index + 1) % turn_queue_2.size()
 		set_current_player(side)
@@ -77,12 +79,10 @@ func end_turn(side):
 		clear_bar(bar_1)
 		wait_1 = true
 		current_player_1.hold_time = 0
-		current_player_1.active = false
 	else:
 		clear_bar(bar_2)
 		wait_2 = true
 		current_player_2.hold_time = 0
-		current_player_2.active = false
 	
 func process_ai(delta) -> void:
 	if current_player_2.hold_time < (current_player_2.THRESHOLDS[1].value+0.05):

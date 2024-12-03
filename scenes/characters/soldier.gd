@@ -14,6 +14,7 @@ const THRESHOLDS = [
 const MAX_THRESHOLD: float = 1
 
 func _ready() -> void:
+	print(active)
 	init_sm()
 	hp_bar.value = hp
 	hp_bar.max_value = hp
@@ -91,14 +92,11 @@ func ready_update(_delta:float):
 func hurt_start():
 	animation_player.play('hurt')
 	flash_white()
+	await get_tree().create_timer(0.4).timeout
+	main_sm.dispatch(&"to_walk_back")
 	
 func hurt_update(delta:float):
-	if active:
-		main.start_next_turn(side)
-		print("1why")
-	else:
-		await get_tree().create_timer(0.4).timeout
-		reset_position(delta, move_speed)
+	pass
 
 func evaluate_hold_time() -> void:
 	for threshold in THRESHOLDS:
